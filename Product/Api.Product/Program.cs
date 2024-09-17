@@ -9,9 +9,9 @@ using Amazon.SQS;
 using Microsoft.OpenApi.Models;
 using Service.Services;
 using Infrastructure.Messaging;
+using Amazon.Runtime;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 // Configuração do MongoDB
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
@@ -29,9 +29,20 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.InstanceName = "ProductCache_";
 });
 
-// Configuração do AWS SQS
-builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
-builder.Services.AddAWSService<IAmazonSQS>();
+builder.Services.AddSingleton<IAmazonSQS>(sp =>
+{
+    var credentials = new BasicAWSCredentials(
+        builder.Configuration["AWS:AccessKey"],
+        builder.Configuration["AWS:SecretKey"]);
+
+    var sqsConfig = new AmazonSQSConfig
+    {
+        ServiceURL = "http://localhost:4566", 
+        UseHttp = true  
+    };
+
+    return new AmazonSQSClient(credentials, sqsConfig);
+});
 
 // Registro dos repositórios e serviços
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -66,10 +77,10 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection(); 
+app.UseHttpsRedirection();
 
-app.UseAuthorization(); 
+app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run(); 
+app.Run();
