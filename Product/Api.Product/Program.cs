@@ -1,25 +1,75 @@
+using Domain.Repositories;
+using Domain.Services;
+using Infrastructure.Context;
+using Infrastructure.Repositories;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
+using StackExchange.Redis;
+using Amazon.SQS;
+using Microsoft.OpenApi.Models;
+using Service.Services;
+using Infrastructure.Messaging;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
+// Configuração do MongoDB
+builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
+builder.Services.AddSingleton<IMongoClient>(s =>
+{
+    var settings = s.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+    return new MongoClient(settings.ConnectionString);
+});
+builder.Services.AddScoped<MongoDbContext>();
+
+// Configuração do Redis para cache
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetSection("RedisSettings:ConnectionString").Value;
+    options.InstanceName = "ProductCache_";
+});
+
+// Configuração do AWS SQS
+builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+builder.Services.AddAWSService<IAmazonSQS>();
+
+// Registro dos repositórios e serviços
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
+
+// Registro AWS/SQS (responsável por enviar mensagens para a fila)
+builder.Services.AddSingleton<SqsProducer>();
+
+// Adicionar os controladores da API
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+// Configuração do Swagger para documentação da API
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Product API",
+        Version = "v1",
+        Description = "API para gerenciar produtos com integração MongoDB, Redis e AWS SQS."
+    });
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Product API v1");
+    });
 }
 
-app.UseHttpsRedirection();
+app.UseHttpsRedirection(); 
 
-app.UseAuthorization();
+app.UseAuthorization(); 
 
 app.MapControllers();
 
-app.Run();
+app.Run(); 
