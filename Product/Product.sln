@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{670C2D02-F019-4407-80D3-C724BEFACF29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{670C2D02-F019-4407-80D3-C724BEFACF29}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.Domain", "4.Domain", "{E322DA20-FFBE-465E-A240-6800CB65A37C}"
 EndProject
@@ -13,11 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.Service", "2.Service", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.Application", "1.Application", "{86027537-D768-4811-981F-9E6E7FF23CF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{44324435-9F0D-47C6-9648-E3D4B1466222}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{44324435-9F0D-47C6-9648-E3D4B1466222}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{14D613DF-CCAD-48AB-A331-B9855B555C99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.csproj", "{14D613DF-CCAD-48AB-A331-B9855B555C99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.Product", "Api.Product\Api.Product.csproj", "{8CAEABD3-49EF-4D31-A6C3-8EE7C3EC2350}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.Product", "Api.Product\Api.Product.csproj", "{8CAEABD3-49EF-4D31-A6C3-8EE7C3EC2350}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

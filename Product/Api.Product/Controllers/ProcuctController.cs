@@ -47,10 +47,10 @@ namespace Api.Products.Controllers
 
                 await _productService.CreateProductAsync(product);
 
-                await _sqsProducer.SendMessageAsync($"Novo produto adicionado: {product.Name}");
+                await _sqsProducer.SendMessageAsync($"Novo produto adicionado: {product}");
 
                 _logger.LogInformation($"Produto {product.Name} adicionado com sucesso e mensagem enviada para a fila SQS.");
-                return CreatedAtAction(nameof(GetProductById), new { id = product.Id }, product);
+                return Ok(product);
             }
             catch (Exception ex)
             {
