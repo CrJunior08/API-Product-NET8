@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using Service.Services;
 using Infrastructure.Messaging;
 using Amazon.Runtime;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,12 +59,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
+
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "Product API",
         Version = "v1",
         Description = "API para gerenciar produtos com integração MongoDB, Redis e AWS SQS."
     });
+
 });
 
 var app = builder.Build();

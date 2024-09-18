@@ -1,4 +1,4 @@
-﻿using Domain.Entities; // Certifique-se de que está usando o Product da camada de domínio
+﻿using Domain.Entities;
 using Domain.Repositories;
 using MongoDB.Driver;
 using System.Threading.Tasks;

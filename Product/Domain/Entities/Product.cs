@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Domain.Entities
 {
-    public class Product
+    public class Product : BaseCrud
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

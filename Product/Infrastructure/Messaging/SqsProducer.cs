@@ -20,7 +20,12 @@ namespace Infrastructure.Messaging
             _logger = logger;
         }
 
-        public async Task SendMessageAsync(string messageBody)
+        /// <summary>
+        /// Envia uma mensagem para a fila SQS.
+        /// </summary>
+        /// <param name="messageBody">Produto que foi criado.</param>
+        /// <returns>True se a mensagem foi enviada com sucesso, False se houve algum erro.</returns>
+        public async Task<bool> SendMessageAsync(string messageBody)
         {
             try
             {
@@ -35,16 +40,18 @@ namespace Infrastructure.Messaging
                 if (response.HttpStatusCode == System.Net.HttpStatusCode.OK)
                 {
                     _logger.LogInformation($"Mensagem enviada com sucesso para a fila SQS. ID da mensagem: {response.MessageId}");
+                    return true;
                 }
                 else
                 {
                     _logger.LogWarning($"Falha ao enviar mensagem para a fila SQS. Status Code: {response.HttpStatusCode}");
+                    return false;
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Erro ao enviar mensagem para a fila SQS.");
-                  throw;
+                return false; 
             }
         }
     }
