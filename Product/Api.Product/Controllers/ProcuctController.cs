@@ -219,44 +219,5 @@ namespace Api.Products.Controllers
                 return StatusCode(500, "Erro interno do servidor.");
             }
         }
-
-        /// <summary>
-        /// Exclui logicamente um produto, mudando o IsLogicalDeleted para true.
-        /// </summary>
-        /// <param name="id">ID do produto a ser excluído</param>
-        /// <returns>Produto deletado com sucesso.</returns>
-        [HttpDelete("{id}")]
-        [ProducesResponseType(typeof(ProductResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(NotFoundObjectResult), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> DeleteProductLogical(string id)
-        {
-            try
-            {
-                var existingProduct = await _productService.GetProductByIdAsync(id);
-                if (existingProduct == null)
-                {
-                    _logger.LogWarning($"Produto {id} não encontrado.");
-                    return NotFound(new { Message = $"Produto com ID {id} não encontrado." });
-                }
-
-                existingProduct.IsLogicalDeleted = true;
-                existingProduct.DeletedDate = DateTime.UtcNow;
-                await _productService.UpdateProductAsync(existingProduct);
-
-                await _cache.RemoveAsync(id);
-
-                _logger.LogInformation($"Produto {id} excluído logicamente com sucesso.");
-                return Ok($"Produto {id} foi deletado com sucesso.");
-
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Erro ao excluir o produto de id: {id}.");
-                return StatusCode(500, new { Message = "Erro interno do servidor ao excluir o produto." });
-            }
-        }
-
     }
 }
